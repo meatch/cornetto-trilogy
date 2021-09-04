@@ -1,0 +1,35 @@
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    text-align: center;
+    color: rgb(16, 16, 16);
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+*  {
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 30vh auto 100vh;
+    background-color: rgba(255, 255, 255, 0.89);
+    padding: 25px;
+    border-radius: 5px;
+
+    min-height: 2000px;
+}
+
+table {
+    background-color: white;
+    margin: 20px auto;
+    text-align: left;
+    border-collapse: collapse;
+}
+table, table th, table td {
+    border: solid 1px #333;
+    padding: 5px;
+    font-size: 12px;
+}

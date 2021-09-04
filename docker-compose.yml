@@ -1,0 +1,101 @@
+# Proxy
+# https://github.com/nginx-proxy/nginx-proxy
+version: "3.4"
+services:
+    #-------------------------------
+    # NGINX Proxy to handle Multiple Domain Hosts under one container
+    #-------------------------------
+    cornetto-proxy:
+        image: jwilder/nginx-proxy
+        container_name: cornetto-proxy
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./certs/ssl:/etc/nginx/certs
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+
+    #-------------------------------
+    # Apps/Sites
+    #-------------------------------
+    # Hot Fuzz :: Front Facing Website 1 -----------#
+    hotfuzz:
+        build: './nginx'
+        container_name: hotfuzz.com
+        environment:
+            - VIRTUAL_HOST=hotfuzz.com
+            - VIRTUAL_PROTO=https
+            - VIRTUAL_PORT=443
+        ports:
+            - "443"
+        volumes:
+            - ./www:/var/www:z
+            - ./conf.d:/etc/nginx/conf.d:z
+            - ./logs:/logs:z
+            - ./certs/ssl:/etc/nginx/certs
+        links:
+            - phpfpm71
+
+    # Shaun of the Dead :: Front Facing Website 2 -----------#
+    shaunofthedead:
+        build: './nginx'
+        container_name: shaunofthedead.com
+        environment:
+            - VIRTUAL_HOST=shaunofthedead.com
+            - VIRTUAL_PROTO=https
+            - VIRTUAL_PORT=443
+        ports:
+            - "443"
+        volumes:
+            - ./www:/var/www:z
+            - ./conf.d:/etc/nginx/conf.d:z
+            - ./logs:/logs:z
+            - ./certs/ssl:/etc/nginx/certs
+        links:
+            - phpfpm72
+
+    # The World's End :: Backend Server -----------#
+    theworldsend:
+        build: './nginx'
+        container_name: theworldsend.com
+        environment:
+            - VIRTUAL_HOST=theworldsend.com
+            - VIRTUAL_PROTO=https
+            - VIRTUAL_PORT=443
+        ports:
+            - "443"
+        volumes:
+            - ./www:/var/www:z
+            - ./conf.d:/etc/nginx/conf.d:z
+            - ./logs:/logs:z
+            - ./certs/ssl:/etc/nginx/certs
+        links:
+            - phpfpm73
+
+
+    #-------------------------------
+    # PHP-FPM
+    #-------------------------------
+    # PHP 7.1 -----------#
+    phpfpm71:
+        image: php:7.1-fpm
+        container_name: cornetto-phpfpm71
+        volumes:
+            - ./www:/var/www:z
+            - ./certs/ssl:/etc/nginx/certs
+
+    # PHP 7.2 -----------#
+    phpfpm72:
+        image: php:7.2-fpm
+        container_name: cornetto-phpfpm72
+        volumes:
+            - ./www:/var/www:z
+            - ./certs/ssl:/etc/nginx/certs
+
+    # PHP 7.3 -----------#
+    phpfpm73:
+        image: php:7.3-fpm
+        container_name: cornetto-phpfpm73
+        volumes:
+            - ./www:/var/www:z
+            - ./certs/ssl:/etc/nginx/certs
